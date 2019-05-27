@@ -1,8 +1,10 @@
 <mat-card>
   <mat-form-field>
-    <textarea matInput placeholder="Textarea" rows="6" [(ngModel)]="entertedValue"></textarea>
-    <br>
+      <textarea matInput placeholder="Title" rows="1" [(ngModel)]="titleValue"></textarea>
+    </mat-form-field>
+  <mat-form-field>
+    <textarea matInput placeholder="Content" rows="4" [(ngModel)]="contentValue"></textarea>
   </mat-form-field>
-  <button mat-raised-button color = "primary" (click)="onAddPost()">Save Post</button>
+  <button mat-raised-button color = "primary" (click)="onSavePost()">Save Post</button>
 </mat-card>
 
