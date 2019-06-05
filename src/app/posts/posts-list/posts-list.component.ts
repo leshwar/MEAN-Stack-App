@@ -1,3 +1,4 @@
+// This file is responsible to Listen to the Posts that are being created and Pass it to the HTML File so that all the posts are shown
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../post.model';
 import { PostService } from '../post.service';
@@ -24,5 +25,9 @@ export class PostListComponent implements OnInit {
 
   ngOnDestoy() {
     this.postsSub.unsubscribe();
+  }
+
+  onDelete(postId: string){
+    this.postService.deletePost(postId);
   }
 }

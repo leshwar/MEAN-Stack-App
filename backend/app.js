@@ -1,6 +1,18 @@
+//This file is responsible for Handling the Database Connection and REST Calls
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const Post = require('./models/post');
+const mongoose = require('mongoose');
+
+//mongoose.connect('mongodb+srv://leshwar4:lJJLH4nIfsCFdq3p@cluster0-fkppq.gcp.mongodb.net/node-angular?retryWrites=true&w=majority')
+mongoose.connect('mongodb://localhost/node-angular?retryWrites=true&w=majority')
+  .then(() => {
+    console.log('Connected to Database!');
+  })
+  .catch(() => {
+    console.log('Connection Failed!');
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,21 +25,34 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/posts', (req, res, next) => {
-  const post = req.body;
-  console.log(post);
-  res.status(201).json({
-    message: 'Post added Successfully'
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });
+  post.save().then(createdPost => {
+    res.status(201).json({
+      message: 'Post added Successfully',
+      postId: createdPost._id
+    });
   });
 });
 
-app.use('/api/posts', (req, res, next) => {
-  const posts = [
-    {id: 'hash123', title: 'Server-Side Post 1', content: 'This post is coming from the Server'},
-    {id: 'hash124', title: 'Server-Side Post 2', content: 'This post is also coming from the Server'}
-  ];
-  res.status(200).json({
-    message: 'Posts fetched successfully',
-    posts: posts
+app.get('/api/posts', (req, res, next) => {
+  Post.find().then(documents => {
+    console.log(documents);
+    res.status(200).json({
+      message: 'Posts fetched successfully',
+      posts: documents
+    });
+  });
+});
+
+app.delete("/api/posts/:id", (req, res, next) => {
+  Post.deleteOne({_id: req.params.id}).then(result => {
+    console.log(result);
+    res.status(200).json({
+      message: 'Post Deleted!'
+    });
   });
 });
 
